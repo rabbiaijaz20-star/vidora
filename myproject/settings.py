@@ -23,8 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Your apps
-    'apps.users.signup_forms',    # custom user model & signup forms
-    'apps.users.user_profile',    # user profile app
+    'apps.users',
+    'apps.videos', 
+   
 ]
 
 MIDDLEWARE = [
@@ -99,4 +100,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User model
-AUTH_USER_MODEL = 'users_signup_forms.CustomerUser'
+AUTH_USER_MODEL = 'users.CustomerUser'
+

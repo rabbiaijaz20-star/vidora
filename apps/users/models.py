@@ -5,16 +5,17 @@ from django.conf import settings
 # -----------------------------------------------------
 # Custom User Model (Your custom name: CustomerUser)
 # -----------------------------------------------------
+
+
 class CustomerUser(AbstractUser):
     email = models.EmailField(unique=True)
     profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
-    REQUIRED_FIELDS = ['email']  # username stays as required by default
-
+    REQUIRED_FIELDS = ['email']
     def __str__(self):
         return self.username
-
 
 # -----------------------------------------------------
 # User Profile Model (Extra information)

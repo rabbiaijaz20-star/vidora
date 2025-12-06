@@ -3,6 +3,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('apps.users.signup_forms.urls')),  # signup/login URLs
-    path('profile/', include('apps.users.user_profile.urls')),  # profile URLs
+    path('users/', include('apps.users.urls')),  # This connects your users URLs
+    path('', include('apps.videos.urls')),       # Home page is videos list
 ]
