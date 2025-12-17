@@ -3,5 +3,6 @@ from .models import UserProfile
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'bio', 'profile_picture')
-    search_fields = ('user__username', 'bio')
+    list_display = ('id', 'user', 'avatar', 'is_subscribed', 'created_at')
+    search_fields = ('user__username',)
+    list_filter = ('is_subscribed', 'created_at') 

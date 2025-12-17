@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Subscription plans{% endblock %}
+{% block content %}
+  <h2>Plans</h2>
+  {% if plans %}
+    <ul>
+      {% for plan in plans %}
+        <li>
+          <strong>{{ plan.name }}</strong> — {{ plan.price }}<br>
+          {{ plan.description }}
+          <br>
+          {% if user.is_authenticated %}
+           <a href="{% url 'subscriptions:subscribe' plan.id %}">Subscribe</a>
+ 
+          {% else %}
+            <a href="{% url 'login' %}">Login to subscribe</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No plans available.</p>
+  {% endif %}
+{% endblock %}

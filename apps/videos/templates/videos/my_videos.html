@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}My Videos{% endblock %}
+
+{% block content %}
+<h2>My uploads</h2>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; margin-top:16px;">
+  {% for video in page_obj.object_list %}
+    <div>
+      {% include 'videos/video_card.html' with video=video %}
+      <div style="margin-top:6px;">
+        <a href="{% url 'videos:watch' video.id %}">Watch</a> |
+        <a href="{% url 'videos:delete' video.id %}">Delete</a>
+      </div>
+    </div>
+  {% empty %}
+    <p>You have not uploaded any videos.</p>
+  {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+  <nav style="margin-top:20px; text-align:center;">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </nav>
+{% endif %}
+{% endblock %}

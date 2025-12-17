@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Upload Avatar</h1>
+
+  <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Upload</button>
+  </form>
+
+  <!-- Link back to profile page -->
+  <a href="{% url 'user_profile:profile' %}">Back to Profile</a>
+{% endblock %}

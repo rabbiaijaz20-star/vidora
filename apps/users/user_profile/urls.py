@@ -1,6 +1,9 @@
 from django.urls import path
-from . import views
+from .views import profile_view, upload_avatar
+
+app_name = 'user_profile'
 
 urlpatterns = [
-    path('', views.profile_view, name='profile'),
+    path('', profile_view, name='profile'),        # /users/profile/
+    path('upload/', upload_avatar, name='upload')  # /users/profile/upload/
 ]

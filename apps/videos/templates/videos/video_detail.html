@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align:center;">{{ video.title }}</h1>
+
+<div class="video-container">
+    <video controls>
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+    </video>
+</div>
+
+<div style="max-width:800px; margin:10px auto;">
+    <button
+        type="button"
+        class="like-btn"
+        data-video-id="{{ video.id }}"
+    >
+        👍 Like
+    </button>
+
+    <span id="likes-count-{{ video.id }}">
+        {{ video.video_likes.count }}
+
+    </span>
+</div>
+
+<script>
+alert("JS LOADED");
+
+document.querySelectorAll(".like-btn").forEach(btn => {
+    btn.addEventListener("click", function (event) {
+        event.preventDefault();
+        alert("LIKE CLICKED");
+
+        const videoId = this.dataset.videoId;
+
+        fetch(`/likes/toggle/${videoId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById(`likes-count-${videoId}`).innerText = data.likes_count;
+            this.innerText = data.liked ? "👍 Liked" : "👍 Like";
+        });
+    });
+});
+</script>
+
+
+{% endblock %}

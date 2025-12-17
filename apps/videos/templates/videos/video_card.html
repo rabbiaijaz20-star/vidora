@@ -1,63 +1,74 @@
+{% load humanize %}
 <div class="video-card">
-    <a href="{% url 'videos:watch' video.id %}" class="video-link">
+   <a href="{% url 'videos:watch' video.id %}" class="video-link">
+
+        
+        <!-- Thumbnail Section -->
         <div class="thumbnail">
             {% if video.thumbnail %}
-                <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                <img src="{{ video.thumbnail.url }}" alt="Thumbnail for {{ video.title }}">
             {% else %}
-                <div class="no-thumbnail">
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <div class="no-thumbnail" aria-label="No thumbnail available">
+                    <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M23 7l-7 5 7 5V7z"></path>
                         <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
                     </svg>
                 </div>
             {% endif %}
+            
             <div class="duration">
-                {% if video.duration %}
-                    {{ video.duration }}
-                {% else %}
-                    --:--
-                {% endif %}
+                {{ video.duration|default:"--:--" }}
             </div>
         </div>
-        
+
+        <!-- Info Section -->
         <div class="video-info">
-            <h3 class="video-title">{{ video.title }}</h3>
-            
+            <h3 class="video-title" title="{{ video.title }}">{{ video.title }}</h3>
+
             <div class="video-meta">
-                <a href="{% url 'subscriptions:channel' video.uploader.id %}" class="channel-name" onclick="event.stopPropagation();">
+                <a href="{% url 'subscriptions:channel' video.uploader.id %}"
+                   class="channel-name"
+                   onclick="event.stopPropagation();"
+                   title="Visit {{ video.uploader.username }}'s channel">
                     {{ video.uploader.username }}
                 </a>
+
                 <div class="video-stats">
-                    <span>{{ video.views_count }} view{{ video.views_count|pluralize }}</span>
+                    <span>{{ video.views_count|intcomma }} view{{ video.views_count|pluralize }}</span>
                     <span>•</span>
                     <span>{{ video.uploaded_at|timesince }} ago</span>
                 </div>
+
                 <div class="video-engagement">
                     <span>👍 {{ video.get_likes_count }}</span>
                     <span>💬 {{ video.get_comments_count }}</span>
                 </div>
             </div>
         </div>
+
     </a>
 </div>
 
 <style>
     .video-card {
-        background: white;
-        border-radius: 8px;
+        background: #fff;
+        border-radius: 10px;
         overflow: hidden;
-        transition: transform 0.2s, box-shadow 0.2s;
         cursor: pointer;
+        transition: transform 0.25s, box-shadow 0.25s;
+        border: 1px solid #eee;
     }
     .video-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
+
     .video-link {
-        text-decoration: none;
         color: inherit;
+        text-decoration: none;
         display: block;
     }
+
     .thumbnail {
         position: relative;
         width: 100%;
@@ -75,70 +86,73 @@
     }
     .no-thumbnail {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #4f46e5, #9333ea);
         color: white;
     }
+
     .duration {
         position: absolute;
         bottom: 8px;
         right: 8px;
-        background: rgba(0,0,0,0.8);
-        color: white;
+        background: rgba(0,0,0,0.75);
+        color: #fff;
         padding: 2px 6px;
-        border-radius: 3px;
         font-size: 12px;
-        font-weight: bold;
-    }
-    .video-info {
-        padding: 12px;
-    }
-    .video-title {
-        font-size: 14px;
+        border-radius: 3px;
         font-weight: 600;
-        color: #030303;
-        margin: 0 0 8px 0;
+    }
+
+    .video-info {
+        padding: 12px 14px;
+    }
+
+    .video-title {
+        font-size: 14.5px;
+        font-weight: 600;
+        color: #111;
+        margin-bottom: 8px;
         line-height: 1.4;
-        max-height: 40px;
+        max-height: 42px;
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
     }
-    
+
     .video-meta {
         font-size: 12px;
-        color: #606060;
+        color: #555;
     }
+
     .channel-name {
         display: block;
-        color: #606060;
-        text-decoration: none;
+        color: #555;
         margin-bottom: 4px;
         font-weight: 500;
     }
     .channel-name:hover {
-        color: #030303;
+        color: #111;
     }
+
     .video-stats {
         display: flex;
-        gap: 6px;
         align-items: center;
+        gap: 6px;
         margin-bottom: 6px;
     }
+
     .video-engagement {
         display: flex;
-        gap: 12px;
-        margin-top: 8px;
+        gap: 16px;
         padding-top: 8px;
-        border-top: 1px solid #f0f0f0;
+        border-top: 1px solid #f3f3f3;
+        margin-top: 8px;
     }
     .video-engagement span {
         font-size: 11px;
-        color: #606060;
+        color: #444;
     }
 </style>

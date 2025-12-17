@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
 
+
 class Video(models.Model):
     uploader = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -20,7 +21,7 @@ class Video(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_public = models.BooleanField(default=True)
-
+    
     class Meta:
         ordering = ['-uploaded_at']
         indexes = [
@@ -32,10 +33,13 @@ class Video(models.Model):
         return self.title
 
     def get_likes_count(self):
-        return self.likes.count()
+     from apps.likes.models import Like  # import inside the method to avoid circular import
+     return Like.objects.filter(video=self).count()
+
 
     def get_comments_count(self):
-        return self.comments.count()
+        # Uses related_name from Comment model
+        return self.comments_comments.count()
 
     def increment_views(self):
         self.views_count += 1

@@ -1,12 +1,17 @@
 from django.db import models
 from django.conf import settings
 
-User = settings.AUTH_USER_MODEL  # ensures it works with your custom user
+
+def avatar_upload_path(instance, filename):
+    return f'avatars/user_{instance.user_id}/{filename}'
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to=avatar_upload_path, blank=True, null=True)
+    bio = models.CharField(max_length=255, blank=True)
+    is_subscribed = models.BooleanField(default=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return f'Profile({self.user.username})'

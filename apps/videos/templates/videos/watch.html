@@ -1,332 +1,311 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ video.title }}</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background: #f9f9f9; 
-        }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-        }
-        .video-player { 
-            width: 100%; 
-            max-width: 900px; 
-            background: #000; 
-            margin-bottom: 20px; 
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        video { 
-            width: 100%; 
-            display: block; 
-        }
-        .video-info { 
-            background: white; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            border-radius: 8px;
-        }
-        .video-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .video-stats { 
-            display: flex; 
-            gap: 20px; 
-            color: #606060; 
-            font-size: 14px; 
-            margin-bottom: 15px;
-        }
-        .channel-info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-top: 1px solid #e5e5e5;
-            border-bottom: 1px solid #e5e5e5;
-            margin: 15px 0;
-        }
-        .channel-details {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .channel-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #065fd4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
-        }
-        .channel-name {
-            font-weight: 600;
-            color: #030303;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .channel-name:hover {
-            color: #065fd4;
-        }
-        .subscriber-count {
-            color: #606060;
-            font-size: 12px;
-        }
-        .action-buttons { 
-            display: flex; 
-            gap: 10px; 
-        }
-        .btn { 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 20px; 
-            cursor: pointer; 
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .like-btn { 
-            background: #f2f2f2; 
-            color: #030303; 
-        }
-        .like-btn:hover {
-            background: #e5e5e5;
-        }
-        .like-btn.liked {
-            background: #065fd4;
-            color: white;
-        }
-        .subscribe-btn { 
-            background: #cc0000; 
-            color: white; 
-        }
-        .subscribe-btn:hover {
-            background: #a00000;
-        }
-        .subscribe-btn.subscribed {
-            background: #606060;
-        }
-        .description {
-            background: #f2f2f2;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        .related-videos {
-            margin-top: 20px;
-        }
-        .related-videos h3 {
-            margin-bottom: 15px;
-        }
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #065fd4;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .alert {
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <a href="{% url 'videos:list' %}" class="back-link">← Back to Videos</a>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        
-        <div class="video-player">
-            <video controls autoplay>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="watch-page">
+
+    <!-- MAIN AREA -->
+    <div class="video-section">
+
+        <!-- VIDEO PLAYER -->
+        <div class="video-container">
+            <video controls>
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
-        
-        <div class="video-info">
-            <h1 class="video-title">{{ video.title }}</h1>
-            
-            <div class="video-stats">
-                <span>{{ video.views_count }} view{{ video.views_count|pluralize }}</span>
+
+        <!-- TITLE -->
+        <h1 class="video-title">{{ video.title }}</h1>
+
+        <!-- STATS + LIKE BUTTONS -->
+        <div class="video-actions">
+            <div class="video-meta">
+                <span>{{ video.views_count }} views</span>
                 <span>•</span>
-                <span>{{ video.uploaded_at|date:"M d, Y" }}</span>
+                <span>{{ video.uploaded_at|timesince }} ago</span>
             </div>
-            
-            <div class="channel-info">
-                <div class="channel-details">
-                    <div class="channel-avatar">
-                        {{ video.uploader.username|slice:":1"|upper }}
-                    </div>
-                    <div>
-                        <a href="{% url 'subscriptions:channel' video.uploader.id %}" class="channel-name">
-                            {{ video.uploader.username }}
-                        </a>
-                        <div class="subscriber-count">
-                            {{ video.uploader.subscribers.count }} subscriber{{ video.uploader.subscribers.count|pluralize }}
-                        </div>
-                    </div>
+
+            <div class="like-area">
+                {% if user.is_authenticated %}
+                    <button
+                      id="like-btn"
+                      class="like-btn"
+                      data-video-id="{{ video.id }}">
+                      👍   {% if user_liked %}Liked{% else %}Like{% endif %}
+                      ({{ video.video_likes.count }})
+                    </button>
+
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-hint">Login to like</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CHANNEL INFO -->
+        <div class="channel-box">
+            <div class="channel-left">
+                <div class="avatar-circle">
+                    {{ video.uploader.username|slice:":1" }}
                 </div>
-                
-                <div class="action-buttons">
-                    {% if user.is_authenticated %}
-                        <button class="btn like-btn {% if user_liked %}liked{% endif %}" id="like-btn" onclick="toggleLike({{ video.id }})">
-                            {% if user_liked %}👍 Liked{% else %}👍 Like{% endif %} 
-                            <span id="like-count">({{ video.likes.count }})</span>
-                        </button>
-                        
-                        {% if user != video.uploader %}
-                            <button class="btn subscribe-btn" id="subscribe-btn" onclick="toggleSubscription({{ video.uploader.id }})">
-                                Subscribe
-                            </button>
-                        {% endif %}
-                    {% else %}
-                        <a href="{% url 'redirect_login' %}?next={{ request.path }}" class="btn like-btn">
-                            👍 Like ({{ video.likes.count }})
-                        </a>
-                        <a href="{% url 'redirect_login' %}?next={{ request.path }}" class="btn subscribe-btn">
-                            Subscribe
-                        </a>
-                    {% endif %}
+                <div>
+                    <h4 class="channel-name">{{ video.uploader.username }}</h4>
                 </div>
             </div>
-            
-            {% if video.description %}
-            <div class="description">
-                <strong>Description:</strong><br>
-                {{ video.description }}
-            </div>
-            {% endif %}
         </div>
-        
-        <!-- Comments Section -->
-        <div id="comments-section">
-            {% include 'comments/comments_section.html' %}
+
+        <!-- DESCRIPTION -->
+        <div class="description-box">
+            <p>{{ video.description }}</p>
         </div>
-        
-        <!-- Related Videos -->
-        {% if related_videos %}
-        <div class="related-videos">
-            <h3>Related Videos</h3>
-            <div class="related-grid">
-                {% for related_video in related_videos %}
-                    {% include 'videos/video_card.html' with video=related_video %}
-                {% endfor %}
-            </div>
-        </div>
+
+        <!-- COMMENTS SECTION -->
+        <h3 class="comment-header">Comments ({{ video.get_comments_count }})</h3>
+
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'comments:add_comment' video.id %}" class="comment-form">
+                {% csrf_token %}
+                <textarea name="text" rows="3" class="comment-input" placeholder="Add a comment..."></textarea>
+                <button type="submit" class="comment-submit">Comment</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="login-hint">Login to comment</a>
         {% endif %}
+
+        <!-- DISPLAY COMMENTS -->
+        <div class="comments-section">
+            {% for comment in comments %}
+                <div class="comment-box">
+                    <strong>{{ comment.user.username }}</strong>
+                    <p>{{ comment.text }}</p>
+
+                    {% for reply in comment.get_replies %}
+                        <div class="reply-box">
+                            <strong>{{ reply.user.username }}</strong>
+                            <p>{{ reply.text }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
     </div>
-    
-    <script>
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
+
+    <!-- SIDEBAR RELATED VIDEOS -->
+    <div class="sidebar">
+        <h3 class="sidebar-title">Related Videos</h3>
+
+        {% for rv in related_videos %}
+            <a href="{% url 'videos:watch' rv.id %}" class="related-video-card">
+                <img src="{{ rv.thumbnail.url }}" class="related-thumb">
+
+                <div class="related-info">
+                    <h4 class="related-title">{{ rv.title }}</h4>
+                    <p class="related-meta">{{ rv.uploader.username }} • {{ rv.views_count }} views</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+<style>
+
+    .watch-page {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+        margin: 30px auto;
+        max-width: 1250px;
+        padding: 20px;
+    }
+
+    .video-container video {
+        width: 100%;
+        border-radius: 12px;
+        background: #000;
+    }
+
+    .video-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        color: #111;
+    }
+
+    .video-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .video-meta {
+        color: #606060;
+        font-size: 14px;
+        display: flex;
+        gap: 6px;
+    }
+
+    .like-btn {
+        background: #f2f2f2;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .like-btn:hover {
+        background: #e0e0e0;
+    }
+
+    .channel-box {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .channel-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar-circle {
+        background: #d1d1d1;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 700;
+        font-size: 20px;
+        color: white;
+    }
+
+    .channel-name {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .description-box {
+        background: #f8f8f8;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .comment-header {
+        margin-top: 25px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .comment-form {
+        margin-top: 15px;
+    }
+
+    .comment-input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .comment-submit {
+        background: #065fd4;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .comment-box {
+        background: #fff;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        margin-top: 12px;
+    }
+
+    .reply-box {
+        margin-left: 20px;
+        padding-left: 10px;
+        border-left: 2px solid #ccc;
+        margin-top: 8px;
+    }
+
+    /* SIDEBAR RELATED */
+    .sidebar-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .related-video-card {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .related-thumb {
+        width: 160px;
+        height: 90px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #000;
+    }
+
+    .related-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .related-meta {
+        font-size: 12px;
+        color: #606060;
+    }
+
+</style>
+<script>
+const likeBtn = document.getElementById("like-btn");
+
+if (likeBtn) {
+    likeBtn.addEventListener("click", function () {
+        fetch("{% url 'likes:toggle_like' video.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "X-Requested-With": "XMLHttpRequest"
             }
-            return cookieValue;
-        }
-        
-        function toggleLike(videoId) {
-            const csrftoken = getCookie('csrftoken');
-            
-            fetch(`/likes/toggle/${videoId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const likeBtn = document.getElementById('like-btn');
-                    const likeCount = document.getElementById('like-count');
-                    
-                    if (data.liked) {
-                        likeBtn.innerHTML = '👍 Liked <span id="like-count">(' + data.likes_count + ')</span>';
-                        likeBtn.classList.add('liked');
-                    } else {
-                        likeBtn.innerHTML = '👍 Like <span id="like-count">(' + data.likes_count + ')</span>';
-                        likeBtn.classList.remove('liked');
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
-        }
-        
-        function toggleSubscription(userId) {
-            const csrftoken = getCookie('csrftoken');
-            
-            fetch(`/subscriptions/toggle/${userId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const subscribeBtn = document.getElementById('subscribe-btn');
-                    
-                    if (data.subscribed) {
-                        subscribeBtn.textContent = 'Subscribed (' + data.subscriber_count + ')';
-                        subscribeBtn.classList.add('subscribed');
-                    } else {
-                        subscribeBtn.textContent = 'Subscribe';
-                        subscribeBtn.classList.remove('subscribed');
-                    }
-                } else if (data.error) {
-                    alert(data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
-        }
-    </script>
-</body>
-</html>
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                likeBtn.innerText = data.liked
+                    ? `👍 Liked (${data.likes_count})`
+                    : `👍 Like (${data.likes_count})`;
+            }
+        });
+    });
+}
+</script>
+
+
+{% endblock %}

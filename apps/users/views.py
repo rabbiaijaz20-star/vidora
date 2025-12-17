@@ -1,15 +1,13 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-
+from apps.videos.models import Video
+from django.shortcuts import redirect
 def home(request):
- return render(request, 'home.html')
-# /users/
+    return redirect('videos:list')
 
-def login_view(request):
-    return HttpResponse("Login Page")  # /users/login/
-
-def signup_view(request):
-    return HttpResponse("Signup Page")  # /users/signup/
-
-def profile(request):
-    return HttpResponse("User Profile Page")  # /users/profile/
+def welcome_view(request):
+    featured_videos = Video.objects.all()[:5]  # first 5 videos
+    recommended_videos = Video.objects.order_by('-likes')[:5]  # top liked videos
+    return render(request, 'welcome.html', {
+        'featured_videos': featured_videos,
+        'recommended_videos': recommended_videos,
+    })

@@ -1,8 +1,3 @@
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('', views.home, name='users_home'),
-    path('login/', views.login_view, name='redirect_login'),
-    path('signup/', views.signup_view, name='redirect_signup'),
-]
+# Not used directly; signup is routed via apps/users/urls.py
+# You can keep this file empty or delete it to avoid confusion.
+urlpatterns = []

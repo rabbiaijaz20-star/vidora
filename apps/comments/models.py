@@ -5,12 +5,12 @@ class Comment(models.Model):
     video = models.ForeignKey(
         'videos.Video',
         on_delete=models.CASCADE,
-        related_name='comments'
+        related_name='comments_comments'
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='comments'
+        related_name='comments_made'
     )
     text = models.TextField()
     parent = models.ForeignKey(

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="
+    max-width: 500px;
+    margin: 60px auto;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+">
+
+    <h2 style="font-size: 22px; font-weight: 600; margin-bottom: 15px;">
+        Delete Video
+    </h2>
+
+    <p style="font-size: 16px; color: #444;">
+        Are you sure you want to delete:
+    </p>
+
+    <p style="
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px;
+        background: #f7f7f7;
+        border-radius: 6px;
+        margin-bottom: 25px;
+    ">
+        {{ video.title }}
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" style="
+            background: #cc0000;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        ">
+            Yes, Delete Permanently
+        </button>
+        <a href="{% url 'videos:my_videos' %}" style="
+            margin-left: 15px;
+            font-size: 16px;
+            text-decoration: none;
+            color: #065fd4;
+        ">
+            Cancel
+        </a>
+    </form>
+
+</div>
+{% endblock %}

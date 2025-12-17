@@ -1,24 +1,10 @@
+# apps/likes/models.py
 from django.db import models
-from django.conf import settings
+from apps.videos.models import Video
+from apps.users.models import CustomerUser
 
 class Like(models.Model):
-    video = models.ForeignKey(
-        'videos.Video',
-        on_delete=models.CASCADE,
-        related_name='likes'
-    )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='liked_videos'
-    )
+    user = models.ForeignKey(CustomerUser, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="video_likes")  
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('video', 'user')
-        indexes = [
-            models.Index(fields=['video', 'user']),
-        ]
-
-    def __str__(self):
-        return f"{self.user.username} likes {self.video.title}"
+    updated_at = models.DateTimeField(auto_now=True)

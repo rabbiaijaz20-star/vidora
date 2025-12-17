@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StreamHub - Home</title>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <header>
+        <nav>
+            <a href="{% url 'home' %}">Home</a> |
+            <a href="{% url 'videos' %}">Videos</a> |
+            <a href="{% url 'subscriptions' %}">Subscriptions</a> |
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">Profile</a> |
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a> |
+                <a href="{% url 'signup' %}">Signup</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- Search Bar -->
+    <section>
+        <form method="get" action="{% url 'videos' %}">
+            <input type="text" name="q" placeholder="Search videos...">
+            <button type="submit">Search</button>
+        </form>
+    </section>
+
+    <!-- Featured Section -->
+    <main>
+        <h2>Featured Videos</h2>
+        <ul>
+            {% for video in featured_videos %}
+                <li>
+                    <a href="{% url 'video_detail' video.id %}">
+                        {{ video.title }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No featured videos yet.</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Recommended for You</h2>
+        <ul>
+            {% for video in recommended_videos %}
+                <li>
+                    <a href="{% url 'video_detail' video.id %}">
+                        {{ video.title }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No recommendations yet.</li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 StreamHub. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

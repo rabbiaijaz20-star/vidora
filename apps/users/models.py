@@ -20,16 +20,16 @@ class CustomerUser(AbstractUser):
 # -----------------------------------------------------
 # User Profile Model (Extra information)
 # -----------------------------------------------------
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='profile'
-    )
-    about = models.TextField(blank=True, null=True)
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(
+#         settings.AUTH_USER_MODEL,
+#         on_delete=models.CASCADE,
+#         related_name='profile'
+#     )
+#     about = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
+#     def __str__(self):
+#         return f"{self.user.username}'s Profile"
 
 
 # -----------------------------------------------------

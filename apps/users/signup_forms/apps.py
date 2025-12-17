@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 class SignupFormsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'users.signup_forms'  # <- full Python path
+    name = 'apps.users.signup_forms'   # ✅ must match INSTALLED_APPS

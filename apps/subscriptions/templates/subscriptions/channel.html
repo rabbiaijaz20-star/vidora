@@ -1,0 +1,19 @@
+{% load humanize %}
+<div class="video-grid">
+    {% for video in videos %}
+        {% include 'videos/video_card.html' with video=video %}
+    {% empty %}
+        <p>No videos yet.</p>
+    {% endfor %}
+</div>
+
+<style>
+    h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+    p {
+        font-size: 1.2em;
+        margin: 10px 0;
+    }
+</style>

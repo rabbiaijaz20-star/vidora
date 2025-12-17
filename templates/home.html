@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+  <h1>Welcome</h1>
+  <p>
+    <a href="{% url 'login' %}">Login</a> |
+    <a href="{% url 'users:signup' %}">Signup</a> |
+|   <a href="{% url 'user_profile:profile' %}">Profile</a> |
+    <a href="{% url 'subscriptions:subscription_plans' %}">Plans</a>
+
+  </p>
+{% endblock %}

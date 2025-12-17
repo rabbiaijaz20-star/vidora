@@ -1,21 +1,24 @@
-from django.shortcuts import render, redirect
-from .forms import UserProfileForm
-from .models import UserProfile
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import AvatarUploadForm
+from .models import UserProfile
 
 @login_required
 def profile_view(request):
-    try:
-        profile = request.user.userprofile
-    except UserProfile.DoesNotExist:
-        profile = UserProfile(user=request.user)
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    form = AvatarUploadForm(instance=profile)
+    return render(request, 'profile.html', {'profile': profile})
 
+@login_required
+def upload_avatar(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        form = AvatarUploadForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            messages.success(request, 'Avatar uploaded successfully.')
+            return redirect('user_profile:profile') 
     else:
-        form = UserProfileForm(instance=profile)
-
-    return render(request, 'user_profile/profile.html', {'form': form})
+        form = AvatarUploadForm(instance=profile)
+    return render(request, 'upload.html', {'form': form})
