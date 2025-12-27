@@ -317,6 +317,45 @@ footer{
   z-index:9999;
   filter:blur(2px);
 }
+/* ===== COMMENT SECTION FIX ===== */
+
+/* Comment wrapper (agar koi container ho) */
+.comment,
+.comments,
+.comment-box{
+  color:#000;
+}
+
+/* Comment text */
+.comment p,
+.comment span,
+.comment small{
+  color:#000;
+}
+
+/* Comment input / textarea */
+.comment textarea,
+.comment input,
+textarea,
+input[type="text"]{
+  background:#fff;
+  color:#000;
+  border:1px solid #ccc;
+}
+
+/* Placeholder text */
+textarea::placeholder,
+input::placeholder{
+  color:#555;
+}
+
+/* Focus state */
+textarea:focus,
+input:focus{
+  outline:none;
+  border-color:#000;
+}
+
 
 </style>
 </head>
