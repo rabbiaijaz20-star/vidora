@@ -355,6 +355,27 @@ input:focus{
   outline:none;
   border-color:#000;
 }
+/* ===== LOGOUT BUTTON ===== */
+.logout-form{
+  display:inline-block;
+  margin-left:14px;
+}
+
+.logout-btn{
+  padding:7px 16px;
+  border-radius:8px;
+  border:none;
+  background:linear-gradient(135deg,#ffb547,#ff8a00);
+  color:#1b1200;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(255,180,70,.45);
+}
+
+.logout-btn:hover{
+  filter:brightness(1.1);
+}
+
 
 
 </style>
@@ -380,7 +401,11 @@ input:focus{
     {% if user.is_authenticated %}
       <a href="{% url 'videos:upload' %}" class="btn-upload">Upload</a>
       <a href="{% url 'user_profile:profile' %}">Profile</a>
-      <a href="{% url 'users:logout' %}">Logout</a>
+      <form method="POST" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+      
     {% else %}
       <a href="{% url 'users:login' %}">Login</a>
       <a href="{% url 'users:signup' %}">Sign Up</a>
